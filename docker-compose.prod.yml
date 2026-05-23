@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///./data/sentinel.db}
+      - SECRET_KEY=${SECRET_KEY}
+      - MODEL_PATH=${MODEL_PATH:-/app/ml_artifacts}
+      - DATASET_PATH=${DATASET_PATH:-/app/datasets}
+    volumes:
+      - ./data:/app/data
+      - ./ml_artifacts:/app/ml_artifacts
+      - ./datasets:/app/datasets
+    restart: unless-stopped
+    networks:
+      - sentinel
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+    networks:
+      - sentinel
+    depends_on:
+      - backend
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  sentinel:
+    driver: bridge
