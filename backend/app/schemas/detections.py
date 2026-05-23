@@ -102,6 +102,18 @@ class CaseCreate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
 
+class UserBriefOut(BaseModel):
+    id: UUID
+    first_name: str
+    last_name: str
+    email: str
+    avatar_url: Optional[str]
+    role: str
+    
+    class Config:
+        from_attributes = True
+
+
 class CaseOut(BaseModel):
     id: UUID
     detection_result_id: UUID
@@ -140,16 +152,6 @@ class CommentOut(BaseModel):
     class Config:
         from_attributes = True
 
-class UserBriefOut(BaseModel):
-    id: UUID
-    first_name: str
-    last_name: str
-    email: str
-    avatar_url: Optional[str]
-    role: str
-    
-    class Config:
-        from_attributes = True
 
 class CaseFilter(BaseModel):
     status: Optional[CaseStatus] = None
