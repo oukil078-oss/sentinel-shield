@@ -160,7 +160,7 @@ class RiskSignal(Base):
     signal_type = Column(String(100), nullable=False)
     severity = Column(String(20), default="medium")  # low, medium, high, critical
     description = Column(Text, nullable=False)
-    metadata = Column(JSON, default=dict)
+    extra_data = Column(JSON, default=dict)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
 class AnalystCase(Base):
@@ -206,7 +206,7 @@ class Alert(Base):
     severity = Column(String(20), default="medium")
     read = Column(Boolean, default=False)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
-    metadata = Column(JSON, default=dict)
+    extra_data = Column(JSON, default=dict)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     
     user = relationship("User")

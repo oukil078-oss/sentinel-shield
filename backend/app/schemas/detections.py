@@ -32,7 +32,7 @@ class RiskSignalOut(BaseModel):
     signal_type: str
     severity: str
     description: str
-    metadata: Dict[str, Any]
+    extra_data: Dict[str, Any]
     created_at: datetime
     
     class Config:
